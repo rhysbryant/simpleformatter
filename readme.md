@@ -4,14 +4,15 @@ a golang package for parsing a format expression and outputting strings in that 
 ## Examples
 ### Simple Usage
 ```go
-    fields:=string{"username","fullname"}
+    fields:= []string{"username","fullname"}
 
     sfp,err:= simpleformatter.NewParsedFormat(fields,"hi user {fullname}")
     if err!=nil{
             fmt.Println(err)
             return 
     }
-
+    //the field order must match that of fields above
+    records:= []interface{}{[]string{"tjosh","Tom josh"}}
     for _,record := range records{
         fmt.Println(sftp.GetFormattedValue(record))
     }
