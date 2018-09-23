@@ -16,10 +16,33 @@ package simpleformatter
     You should have received a copy of the GNU General Public License
 	along with Simple Formatter.  If not, see <https://www.gnu.org/licenses/>.
 **/
-type constantField struct {
-	value string
+const (
+	defaultSectionName = "Default"
+)
+
+//SectionDefinition holds the definition of a named section and the fields valid within it
+type SectionDefinition struct {
+	FieldNames  []string
+	SectionName string
+	SimpleFormatParser
 }
 
-func (field *constantField) GetValue(values []interface{}) string {
-	return field.value
+type sectionDefinitions []*SectionDefinition
+
+func (s sectionDefinitions) getIndexByName(name string) int {
+	for i := 0; i < len(s); i++ {
+		if s[i].SectionName == name {
+			return i
+		}
+	}
+	return -1
+}
+
+func (s SectionDefinition) getFieldIndexByName(name string) int {
+	for i := 0; i < len(s.FieldNames); i++ {
+		if s.FieldNames[i] == name {
+			return i
+		}
+	}
+	return -1
 }

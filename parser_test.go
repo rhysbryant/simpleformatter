@@ -1,5 +1,21 @@
 package simpleformatter
 
+/**
+    This file is part of Simple Formatter.
+
+    Simple Formatter is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Simple Formatter is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+	along with Simple Formatter.  If not, see <https://www.gnu.org/licenses/>.
+**/
 import (
 	"fmt"
 	"testing"
@@ -21,6 +37,26 @@ func TestParserErrorFieldNotFound(t *testing.T) {
 	_, err := NewParsedFormat(names, "hello {notfound}")
 	if err == nil {
 		t.Error("no error returned")
+	}
+}
+
+func TestParserErrorSectionNameNotKnown(t *testing.T) {
+	defaultSectionDefinition := SectionDefinition{}
+	sections := []*SectionDefinition{&SectionDefinition{SectionName: "END", FieldNames: names}}
+
+	err := NewParsedFormatWithSections("hello BEGIN{User {user}} this", &defaultSectionDefinition, sections...)
+	if err == nil {
+		t.Error("no error returned")
+		return
+	}
+
+	if _, ok := err.(ErrSectionNameNotKnown); !ok {
+		t.Error("unexpected error returned", err)
+		return
+	}
+
+	if err.Error() != "the section name BEGIN is not known" {
+		t.Error("unexpected error string")
 	}
 }
 
@@ -73,6 +109,21 @@ func TestParserIntField(t *testing.T) {
 
 	v := j.GetFormattedValue([]interface{}{123})
 	assert.Equal(t, "hello 123 this", v)
+}
+
+func TestParserIntFieldInSecion(t *testing.T) {
+
+	defaultSectionDefinition := SectionDefinition{}
+	sections := []*SectionDefinition{&SectionDefinition{SectionName: "BEGIN", FieldNames: names}}
+
+	err := NewParsedFormatWithSections("hello BEGIN{User {user}} this", &defaultSectionDefinition, sections...)
+	if err != nil {
+		t.Error(err)
+		return
+	}
+
+	v := sections[0].GetFormattedValue([]interface{}{123})
+	assert.Equal(t, "User 123", v)
 }
 
 func TestParserUnsupportedField(t *testing.T) {
