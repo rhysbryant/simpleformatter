@@ -1,5 +1,5 @@
-# simple formatter
-a golang package for parsing a format expression and outputting strings in that format in a relatively efficient way
+# Simple formatter
+Golang package for parsing a format expression and outputting strings in that format in a relatively efficient way
 
 ## Examples
 ### Simple Usage
@@ -45,9 +45,9 @@ a golang package for parsing a format expression and outputting strings in that 
 ```
 ## Installing
 ```shell
-go get github.com/rhysbryasnt/simpleformatter
+go get github.com/rhysbryant/simpleformatter
 ```
-then add  github.com/rhysbryasnt/simpleformatter to your imports 
+then add  github.com/rhysbryant/simpleformatter to your imports 
 ## running the tests
 there is 98% test coverage to run the tests execute the following
 ```shell
